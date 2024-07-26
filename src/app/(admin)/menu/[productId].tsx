@@ -33,7 +33,7 @@ const ProductDetailsScreen = () => {
         options={{
           title: `${product?.name || "not found"}`,
           headerRight: () => (
-            <Link href="/cart" asChild>
+            <Link href="/(admin)/menu/create" asChild>
               <Pressable>
                 {({ pressed }) => (
                   <FontAwesome
