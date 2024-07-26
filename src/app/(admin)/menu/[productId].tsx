@@ -1,11 +1,13 @@
 import { View, Text, StyleSheet, Image, Pressable } from "react-native";
 import React, { useState } from "react";
-import { Stack, useLocalSearchParams } from "expo-router";
+import { Link, Stack, useLocalSearchParams } from "expo-router";
 import products from "@/assets/data/products";
 import { styles } from "@/src/components/ProductList";
 import Button from "@/src/components/Button";
 import { PizzaSize } from "@/assets/types";
 import { useCart } from "@/src/providers/CartProvider";
+import { FontAwesome } from "@expo/vector-icons";
+import Colors from "@/src/constants/Colors";
 
 const sizes: PizzaSize[] = ["S", "M", "L", "XL"];
 
@@ -27,7 +29,25 @@ const ProductDetailsScreen = () => {
   const product = products.find((p) => p.id.toString() === productId);
   return (
     <>
-      <Stack.Screen options={{ title: `${product?.name || "not found"}` }} />
+      <Stack.Screen
+        options={{
+          title: `${product?.name || "not found"}`,
+          headerRight: () => (
+            <Link href="/cart" asChild>
+              <Pressable>
+                {({ pressed }) => (
+                  <FontAwesome
+                    name="pencil"
+                    size={20}
+                    color={Colors.light.text}
+                    style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
+                  />
+                )}
+              </Pressable>
+            </Link>
+          ),
+        }}
+      />
       {!product ? (
         <View>
           <Text>No Product Found!</Text>
@@ -42,39 +62,11 @@ const ProductDetailsScreen = () => {
         >
           <Image style={styles.image} source={{ uri: product.image }} />
 
-          <Text style={styles.title}>Select Sizes</Text>
-          <View style={styless.sizeContainer}>
-            {sizes.map((size) => (
-              <Pressable
-                onPress={() => setPizzaSize(size)}
-                style={[
-                  styless.sizes,
-                  {
-                    backgroundColor: size === pizzaSize ? "gainsboro" : "white",
-                  },
-                ]}
-                key={size}
-              >
-                <Text
-                  style={[
-                    {
-                      color: size !== pizzaSize ? "grey" : "black",
-                    },
-                  ]}
-                >
-                  {size}{" "}
-                </Text>
-              </Pressable>
-            ))}
-          </View>
-          <Text style={[styles.title, { marginTop: "auto" }]}>
+         
+          <Text style={[styles.title]}>
             ${product.price}{" "}
           </Text>
-          <Button
-            style={{ marginTop: "auto" }}
-            onPress={addToCartHandler}
-            text="Add To Cart"
-          />
+         
         </View>
       )}
     </>

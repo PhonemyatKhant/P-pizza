@@ -1,14 +1,33 @@
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import ProductList from "@/src/components/ProductList";
 import products from "@/assets/data/products";
-import { Stack } from "expo-router";
-
+import { Link, Stack } from "expo-router";
+import { FontAwesome } from "@expo/vector-icons";
+import Colors from "@/src/constants/Colors";
 
 export default function MenuScreen() {
   return (
     <>
-    <Stack.Screen options={{title:'Menu'}}/>
+      <Stack.Screen
+        options={{
+          title: "Menu",
+          headerRight: () => (
+            <Link href="/cart" asChild>
+              <Pressable>
+                {({ pressed }) => (
+                  <FontAwesome
+                    name="plus-square-o"
+                    size={25}
+                    color={Colors.light.text}
+                    style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
+                  />
+                )}
+              </Pressable>
+            </Link>
+          ),
+        }}
+      />
       <FlatList
         data={products}
         numColumns={2}
@@ -20,4 +39,4 @@ export default function MenuScreen() {
   );
 }
 
-const styles = StyleSheet.create({});
+
