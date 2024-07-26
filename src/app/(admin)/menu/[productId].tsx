@@ -31,9 +31,9 @@ const ProductDetailsScreen = () => {
     <>
       <Stack.Screen
         options={{
-          title: `${product?.name || "not found"}`,
+          title: `${product?.name || "not found"}`, 
           headerRight: () => (
-            <Link href="/(admin)/menu/create" asChild>
+            <Link href={`/(admin)/menu/create?id=${productId}`} asChild>
               <Pressable>
                 {({ pressed }) => (
                   <FontAwesome

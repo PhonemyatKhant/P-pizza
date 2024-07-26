@@ -1,9 +1,17 @@
-import { Image, StyleSheet, Text, TextInput, View } from "react-native";
+import {
+  Alert,
+  Image,
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 import React, { useState } from "react";
 import Colors from "@/src/constants/Colors";
 import Button from "@/src/components/Button";
-import { Stack, useRouter } from "expo-router";
-import * as ImagePicker from 'expo-image-picker';
+import { Stack, useLocalSearchParams, useRouter } from "expo-router";
+import * as ImagePicker from "expo-image-picker";
 
 const create = () => {
   const [image, setImage] = useState<string | null>(null);
@@ -11,8 +19,23 @@ const create = () => {
   const [price, setPrice] = useState("");
   const [errors, setErrors] = useState("");
 
+  const { id } = useLocalSearchParams();
+
+  const isEditing = !!id;
+
   const router = useRouter();
+
+  const onSubmit = () => {
+    if (isEditing) {
+      onUpdate();
+    } else {
+      onCreate();
+    }
+  };
   const onCreate = () => {
+    validateInput();
+  };
+  const onUpdate = () => {
     validateInput();
   };
 
@@ -49,15 +72,32 @@ const create = () => {
     }
   };
 
+  const onDelete = () => {};
+
+  const confirmDelete = () => {
+    Alert.alert("Confirm", "Delete this product?", [
+      { text: "Cancel" },
+      {
+        text: "Delete",
+        onPress: onDelete,
+        style: "destructive",
+      },
+    ]);
+  };
+
   return (
     <View style={styles.container}>
-        <Stack.Screen options={{title:'Create Product'}}/>
+      <Stack.Screen
+        options={{ title: isEditing ? "Edit Product" : "Create Product" }}
+      />
       <Image
         source={{ uri: image! }}
         style={styles.image}
         resizeMode="contain"
       />
-      <Text onPress={pickImage} style={styles.textButton}>Select Image</Text>
+      <Text onPress={pickImage} style={styles.textButton}>
+        Select Image
+      </Text>
       <Text style={styles.label}>Name</Text>
       <TextInput
         value={name}
@@ -75,7 +115,12 @@ const create = () => {
         keyboardType="numeric"
       />
       <Text style={styles.error}>{errors}</Text>
-      <Button onPress={onCreate} text="Create" />
+      <Button onPress={onCreate} text={isEditing ? "Save" : "Create"} />
+      {isEditing && (
+        <Pressable onPress={confirmDelete} style={styles.textButton}>
+          <Text>Delete</Text>
+        </Pressable>
+      )}
     </View>
   );
 };
@@ -94,8 +139,9 @@ const styles = StyleSheet.create({
   textButton: {
     alignSelf: "center",
     fontWeight: "bold",
-    color: Colors.light.tint,
+    color: Colors.light.text,
     marginVertical: 10,
+    backgroundColor: "white",
   },
   label: {
     color: "gray",
