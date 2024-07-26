@@ -6,7 +6,7 @@ import { Link } from "expo-router";
 const index = () => {
   return (
     <View style={{ flex: 1, justifyContent: "center", padding: 10 }}>
-      <Link href={"/sign-in"} asChild>
+      <Link href={"/(auth)/"} asChild>
         <Button text="Sign In" />
       </Link>
       <Link href={"/(user)/menu"} asChild>

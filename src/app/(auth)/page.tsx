@@ -50,7 +50,7 @@ const SignInScreen = () => {
   const signInHandler = () => {};
   const signUpHandler = () => {};
   const onSubmit = () => {
-    validateInput()
+    validateInput();
     if (isSignIn) {
       signInHandler();
     } else {
@@ -82,11 +82,8 @@ const SignInScreen = () => {
         placeholder="****"
         style={styles.input}
       />
-       <Text style={styles.error}>{errors}</Text>
-      <Button
-        onPress={onSubmit}
-        text={isSignIn ? "Sign In" : "Sign Up"}
-      />
+      <Text style={styles.error}>{errors}</Text>
+      <Button onPress={onSubmit} text={isSignIn ? "Sign In" : "Sign Up"} />
 
       <Pressable
         onPress={() =>
