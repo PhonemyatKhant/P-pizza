@@ -1,14 +1,23 @@
-import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import {
+  Alert,
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 import React, { useState } from "react";
 import { Stack, useSegments } from "expo-router";
 import Button from "@/src/components/Button";
 import Colors from "@/src/constants/Colors";
+import { supabase } from "@/src/lib/supabase";
 
 const SignInScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [variant, setVariant] = useState<"sign-in" | "sign-up">("sign-in");
   const [errors, setErrors] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const isSignIn = variant === "sign-in";
 
@@ -47,8 +56,16 @@ const SignInScreen = () => {
     return true;
   };
 
-  const signInHandler = () => {};
-  const signUpHandler = () => {};
+  const signInHandler = async () => {};
+  const signUpHandler = async () => {
+    setLoading(true);
+    const { error } = await supabase.auth.signUp({ email, password });
+
+    if (error) {
+      Alert.alert(error.message);
+    }
+    setLoading(false);
+  };
   const onSubmit = () => {
     validateInput();
     if (isSignIn) {
@@ -83,7 +100,11 @@ const SignInScreen = () => {
         style={styles.input}
       />
       <Text style={styles.error}>{errors}</Text>
-      <Button onPress={onSubmit} text={isSignIn ? "Sign In" : "Sign Up"} />
+      <Button
+        disabled={loading}
+        onPress={onSubmit}
+        text={isSignIn ? "Sign In" : "Sign Up"}
+      />
 
       <Pressable
         onPress={() =>
