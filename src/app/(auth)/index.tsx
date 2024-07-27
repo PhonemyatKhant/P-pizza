@@ -56,7 +56,15 @@ const SignInScreen = () => {
     return true;
   };
 
-  const signInHandler = async () => {};
+  const signInHandler = async () => {
+    setLoading(true);
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+
+    if (error) {
+      Alert.alert(error.message);
+    }
+    setLoading(false);
+  };
   const signUpHandler = async () => {
     setLoading(true);
     const { error } = await supabase.auth.signUp({ email, password });
@@ -83,7 +91,11 @@ const SignInScreen = () => {
         backgroundColor: "white",
       }}
     >
-      <Stack.Screen options={{ title: isSignIn ? "Sign in" : "Sign up" }} />
+      <Stack.Screen
+        options={{
+          title: loading ? "Loading..." : isSignIn ? "Sign in" : "Sign up",
+        }}
+      />
       <Text style={styles.label}>Name</Text>
       <TextInput
         value={email}

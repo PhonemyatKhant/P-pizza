@@ -1,8 +1,14 @@
 import React from "react";
-import { Stack } from "expo-router";
+import { Redirect, Stack } from "expo-router";
 import { View } from "react-native";
+import { useAuth } from "@/src/providers/AuthProvider";
 
 const AuthLayout = () => {
+  const { session } = useAuth();
+
+  if (session) {
+    return <Redirect href={"/"} />;
+  }
   return <Stack></Stack>;
 };
 
