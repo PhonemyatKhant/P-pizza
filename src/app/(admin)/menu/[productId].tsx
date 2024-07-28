@@ -1,4 +1,11 @@
-import { View, Text, StyleSheet, Image, Pressable } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  Pressable,
+  ActivityIndicator,
+} from "react-native";
 import React, { useState } from "react";
 import { Link, Stack, useLocalSearchParams } from "expo-router";
 import products from "@/assets/data/products";
@@ -8,6 +15,7 @@ import { PizzaSize } from "@/assets/types";
 import { useCart } from "@/src/providers/CartProvider";
 import { FontAwesome } from "@expo/vector-icons";
 import Colors from "@/src/constants/Colors";
+import { useProduct } from "@/src/api/products";
 
 const sizes: PizzaSize[] = ["S", "M", "L", "XL"];
 
@@ -26,12 +34,27 @@ const ProductDetailsScreen = () => {
     }
   };
 
-  const product = products.find((p) => p.id.toString() === productId);
+  // const product = products.find((p) => p.id.toString() === productId);
+
+  const {
+    data: product,
+    isLoading,
+    error,
+  } = useProduct(
+    parseInt(typeof productId === "string" ? productId : productId![0])
+  );
+
+  if (isLoading) {
+    return <ActivityIndicator />;
+  }
+  if (error || !product) {
+    return <Text>Failed to fetch product</Text>;
+  }
   return (
     <>
       <Stack.Screen
         options={{
-          title: `${product?.name || "not found"}`, 
+          title: `${product?.name || "not found"}`,
           headerRight: () => (
             <Link href={`/(admin)/menu/create?id=${productId}`} asChild>
               <Pressable>
@@ -60,13 +83,11 @@ const ProductDetailsScreen = () => {
             flex: 1,
           }}
         >
-          <Image style={styles.image} source={{ uri: product.image }} />
 
-         
-          <Text style={[styles.title]}>
-            ${product.price}{" "}
-          </Text>
-         
+          {/* ADD DEFAULT IMAGE HERE  */}
+          <Image style={styles.image} source={{ uri: product.image || "" }} />
+
+          <Text style={[styles.title]}>${product.price} </Text>
         </View>
       )}
     </>

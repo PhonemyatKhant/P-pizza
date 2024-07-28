@@ -1,4 +1,11 @@
-import { View, Text, StyleSheet, Image, Pressable } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  Pressable,
+  ActivityIndicator,
+} from "react-native";
 import React, { useState } from "react";
 import { Stack, useLocalSearchParams } from "expo-router";
 import products from "@/assets/data/products";
@@ -6,6 +13,7 @@ import { styles } from "@/src/components/ProductList";
 import Button from "@/src/components/Button";
 import { PizzaSize } from "@/assets/types";
 import { useCart } from "@/src/providers/CartProvider";
+import { useProduct } from "@/src/api/products";
 
 const sizes: PizzaSize[] = ["S", "M", "L", "XL"];
 
@@ -24,7 +32,20 @@ const ProductDetailsScreen = () => {
     }
   };
 
-  const product = products.find((p) => p.id.toString() === productId);
+  const {
+    data: product,
+    isLoading,
+    error,
+  } = useProduct(
+    parseInt(typeof productId === "string" ? productId : productId![0])
+  );
+
+  if (isLoading) {
+    return <ActivityIndicator />;
+  }
+  if (error || !product) {
+    return <Text>Failed to fetch product</Text>;
+  }
   return (
     <>
       <Stack.Screen options={{ title: `${product?.name || "not found"}` }} />
@@ -40,7 +61,7 @@ const ProductDetailsScreen = () => {
             flex: 1,
           }}
         >
-          <Image style={styles.image} source={{ uri: product.image }} />
+          <Image style={styles.image} source={{ uri: product.image || "" }} />
 
           <Text style={styles.title}>Select Sizes</Text>
           <View style={styless.sizeContainer}>

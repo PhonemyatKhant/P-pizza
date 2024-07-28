@@ -7,12 +7,13 @@ import {
 } from "react";
 import { supabase } from "../lib/supabase";
 import { Session } from "@supabase/supabase-js";
+import { Profile } from "@/assets/types";
 
 type authData = {
   session: Session | null;
   loading: boolean;
   isAdmin: boolean;
-  profile: any;
+  profile: Profile | null;
 };
 
 const AuthContext = createContext<authData>({
@@ -24,7 +25,7 @@ const AuthContext = createContext<authData>({
 
 export default function AuthProvider({ children }: PropsWithChildren) {
   const [session, setSession] = useState<Session | null>(null);
-  const [profile, setProfile] = useState(null);
+  const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     const getUserSession = async () => {
@@ -46,6 +47,7 @@ export default function AuthProvider({ children }: PropsWithChildren) {
     };
     getUserSession();
   }, []);
+
   return (
     <AuthContext.Provider
       value={{ session, loading, isAdmin: profile?.group === "ADMIN", profile }}
