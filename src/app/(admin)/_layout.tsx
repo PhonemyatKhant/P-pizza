@@ -17,12 +17,15 @@ function TabBarIcon(props: {
 }
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
+  // const colorScheme = useColorScheme();
 
   const { isAdmin } = useAuth();
 
+  // console.log(isAdmin,'admin page');
+  
+
   if (!isAdmin) {
-    return <Redirect href={"/"} />;
+    return <Redirect href={'/(user)'} />;
   }
 
   return (

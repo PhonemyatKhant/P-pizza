@@ -12,6 +12,7 @@ import Colors from "@/src/constants/Colors";
 import Button from "@/src/components/Button";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import * as ImagePicker from "expo-image-picker";
+import { supabase } from "@/src/lib/supabase";
 
 const create = () => {
   const [image, setImage] = useState<string | null>(null);
@@ -115,6 +116,7 @@ const create = () => {
         keyboardType="numeric"
       />
       <Text style={styles.error}>{errors}</Text>
+      <Button text="Sign Out" onPress={() => supabase.auth.signOut()} />
       <Button onPress={onCreate} text={isEditing ? "Save" : "Create"} />
       {isEditing && (
         <Pressable onPress={confirmDelete} style={styles.textButton}>

@@ -16,7 +16,7 @@ import { useProductList } from "@/src/api/products";
 
 export default function MenuScreen() {
   const { data, isLoading, error } = useProductList();
-
+  
   if (isLoading) {
     return <ActivityIndicator />;
   }
