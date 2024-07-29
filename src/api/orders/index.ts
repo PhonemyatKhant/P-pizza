@@ -91,3 +91,28 @@ export const useInsertOrder = () => {
     },
   });
 };
+export const useUpdateOrder = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    async mutationFn({ id, status }: { id: number; status: string }) {
+      const { data, error } = await supabase
+        .from("orders")
+        .update({ status })
+        .eq("id", id)
+        .select();
+
+      if (error) {
+        throw error;
+      }
+      return data;
+    },
+    async onSuccess(_, {id}) {
+      await queryClient.invalidateQueries({ queryKey: ["orders"] });
+      await queryClient.invalidateQueries({ queryKey: ["order", id] });
+    },
+    onError(error) {
+      console.log(error);
+    },
+  });
+};

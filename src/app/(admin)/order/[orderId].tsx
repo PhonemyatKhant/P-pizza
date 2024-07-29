@@ -6,26 +6,35 @@ import {
   Text,
   View,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { Stack, useLocalSearchParams } from "expo-router";
 import orders from "@/assets/data/orders";
 import OrderListItem from "@/src/components/OrderListItem";
 import OrderItemListItem from "@/src/components/OrderItemListItem";
-import { OrderStatusList } from "@/assets/types";
+import { OrderStatus, OrderStatusList } from "@/assets/types";
 import Colors from "@/src/constants/Colors";
-import { useOrderDetails } from "@/src/api/orders";
+import { useOrderDetails, useUpdateOrder } from "@/src/api/orders";
 
 const OrderDetailsPage = () => {
   const { orderId } = useLocalSearchParams();
   const id = parseFloat(typeof orderId === "string" ? orderId : orderId![0]);
+  const [loading, setLoading] = useState(false);
 
   const { data: order, isLoading, error } = useOrderDetails(id);
+
+  const { mutate: updateOrder } = useUpdateOrder();
   if (isLoading) {
     return <ActivityIndicator />;
   }
   if (error) {
     return <Text>Failed to fetch</Text>;
   }
+
+  const updateStatus = async (status: OrderStatus) => {
+    setLoading(true);
+    updateOrder({ id, status: status });
+    setLoading(false);
+  };
 
   return (
     <View>
@@ -43,8 +52,9 @@ const OrderDetailsPage = () => {
         <View style={{ flexDirection: "row", gap: 5 }}>
           {OrderStatusList.map((status) => (
             <Pressable
+              disabled={loading}
               key={status}
-              onPress={() => console.warn("Update status")}
+              onPress={() => updateStatus(status)}
               style={{
                 borderColor: Colors.light.tint,
                 borderWidth: 1,

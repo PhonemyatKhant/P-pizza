@@ -21,7 +21,6 @@ const OrderDetailsPage = () => {
   const id = parseFloat(typeof orderId === "string" ? orderId : orderId![0]);
 
   const { data: order, isLoading, error } = useOrderDetails(id);
-  console.log(order);
   
   if (isLoading) {
     return <ActivityIndicator />;
