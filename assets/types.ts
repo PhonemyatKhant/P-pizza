@@ -19,10 +19,10 @@ export const OrderStatusList: OrderStatus[] = [
   'New',
   'Cooking',
   'Delivering',
-  'Delivered',
+  'DELIVERED',
 ];
 
-export type OrderStatus = 'New' | 'Cooking' | 'Delivering' | 'Delivered';
+export type OrderStatus = 'New' | 'Cooking' | 'Delivering' | 'DELIVERED';
 
 export type Order = {
   id: number;
