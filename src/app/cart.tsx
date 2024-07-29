@@ -7,7 +7,7 @@ import Button from "../components/Button";
 import { supabase } from "../lib/supabase";
 
 const cart = () => {
-  const { items, total } = useCart();
+  const { items, total, checkout } = useCart();
   return (
     <>
       {items.length > 0 ? (
@@ -27,7 +27,9 @@ const cart = () => {
           >
             Total: ${total}
           </Text>
-          <View  style={{margin:20}}><Button text="Checkout" /></View>
+          <View style={{ margin: 20 }}>
+            <Button onPress={checkout} text="Checkout" />
+          </View>
           <StatusBar style={Platform.OS === "ios" ? "light" : "auto"} />
         </View>
       ) : (
