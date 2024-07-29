@@ -8,7 +8,7 @@ import { supabase } from "../lib/supabase";
 const index = () => {
   const { session, loading, isAdmin, profile } = useAuth();
 
-  console.log(loading, profile?.group);
+  // console.log(loading, profile?.group);
 
   if (loading) {
     return <ActivityIndicator />;

@@ -7,12 +7,18 @@ import {
   TextInput,
   View,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Colors from "@/src/constants/Colors";
 import Button from "@/src/components/Button";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import * as ImagePicker from "expo-image-picker";
 import { supabase } from "@/src/lib/supabase";
+import {
+  useDeleteProduct,
+  useInsertProduct,
+  useProduct,
+  useUpdateProduct,
+} from "@/src/api/products";
 
 const create = () => {
   const [image, setImage] = useState<string | null>(null);
@@ -21,10 +27,26 @@ const create = () => {
   const [errors, setErrors] = useState("");
 
   const { id } = useLocalSearchParams();
+  let productId: number;
 
   const isEditing = !!id;
 
+  if (isEditing) {
+    productId = parseFloat(typeof id === "string" ? id : id![0]);
+
+    const { data: updatingProduct } = useProduct(productId);
+    useEffect(() => {
+      setName(updatingProduct?.name as string);
+      setImage(updatingProduct?.image as string);
+      setPrice(updatingProduct?.price.toString() as string);
+    }, [updatingProduct]);
+  }
+
   const router = useRouter();
+
+  const { mutate: insertProduct } = useInsertProduct();
+  const { mutate: updateProduct } = useUpdateProduct();
+  const { mutate: deleteProduct } = useDeleteProduct();
 
   const onSubmit = () => {
     if (isEditing) {
@@ -35,9 +57,27 @@ const create = () => {
   };
   const onCreate = () => {
     validateInput();
+
+    insertProduct(
+      { name, image, price: parseFloat(price) },
+      {
+        onSuccess() {
+          router.back();
+        },
+      }
+    );
   };
   const onUpdate = () => {
     validateInput();
+
+    updateProduct(
+      { id, name, image, price: parseFloat(price) },
+      {
+        onSuccess() {
+          router.back();
+        },
+      }
+    );
   };
 
   const validateInput = () => {
@@ -66,14 +106,20 @@ const create = () => {
       quality: 1,
     });
 
-    console.log(result);
+    // console.log(result);
 
     if (!result.canceled) {
       setImage(result.assets[0].uri);
     }
   };
 
-  const onDelete = () => {};
+  const onDelete = () => {
+    deleteProduct(productId, {
+      onSuccess() {
+        router.replace("/(admin)/menu/");
+      },
+    });
+  };
 
   const confirmDelete = () => {
     Alert.alert("Confirm", "Delete this product?", [
@@ -92,7 +138,11 @@ const create = () => {
         options={{ title: isEditing ? "Edit Product" : "Create Product" }}
       />
       <Image
-        source={{ uri: image! }}
+        source={{
+          uri:
+            image ||
+            "https://img.freepik.com/free-vector/colorful-round-tasty-pizza_1284-10219.jpg?size=626&ext=jpg",
+        }}
         style={styles.image}
         resizeMode="contain"
       />
@@ -116,8 +166,8 @@ const create = () => {
         keyboardType="numeric"
       />
       <Text style={styles.error}>{errors}</Text>
-      <Button text="Sign Out" onPress={() => supabase.auth.signOut()} />
-      <Button onPress={onCreate} text={isEditing ? "Save" : "Create"} />
+      {/* <Button text="Sign Out" onPress={() => supabase.auth.signOut()} /> */}
+      <Button onPress={onSubmit} text={isEditing ? "Save" : "Create"} />
       {isEditing && (
         <Pressable onPress={confirmDelete} style={styles.textButton}>
           <Text>Delete</Text>

@@ -83,9 +83,15 @@ const ProductDetailsScreen = () => {
             flex: 1,
           }}
         >
-
           {/* ADD DEFAULT IMAGE HERE  */}
-          <Image style={styles.image} source={{ uri: product.image || "" }} />
+          <Image
+            style={styles.image}
+            source={{
+              uri:
+                product.image ||
+                "https://img.freepik.com/free-vector/colorful-round-tasty-pizza_1284-10219.jpg?size=626&ext=jpg",
+            }}
+          />
 
           <Text style={[styles.title]}>${product.price} </Text>
         </View>

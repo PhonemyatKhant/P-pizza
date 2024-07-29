@@ -9,7 +9,14 @@ export default function ProductList({ product }: { product: Product }) {
   return (
     <Link href={`/${segments[0]}/menu/${product.id}`} asChild>
       <Pressable style={styles.container}>
-        <Image source={{ uri: product.image! }} style={styles.image} />
+        <Image
+          source={{
+            uri:
+              product.image! ||
+              "https://img.freepik.com/free-vector/colorful-round-tasty-pizza_1284-10219.jpg?size=626&ext=jpg",
+          }}
+          style={styles.image}
+        />
         <Text style={styles.title}>{product.name} </Text>
         <Text style={styles.price}>${product.price} </Text>
       </Pressable>

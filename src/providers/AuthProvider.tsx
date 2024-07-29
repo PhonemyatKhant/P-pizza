@@ -1,3 +1,4 @@
+import { Profile } from "@/assets/types";
 import { supabase } from "../lib/supabase";
 import { Session } from "@supabase/supabase-js";
 import {
@@ -10,7 +11,7 @@ import {
 
 type AuthData = {
   session: Session | null;
-  profile: any;
+  profile: any | Profile;
   loading: boolean;
   isAdmin: boolean;
 };
@@ -24,7 +25,7 @@ const AuthContext = createContext<AuthData>({
 
 export default function AuthProvider({ children }: PropsWithChildren) {
   const [session, setSession] = useState<Session | null>(null);
-  const [profile, setProfile] = useState(null);
+  const [profile, setProfile] = useState<any | Profile>(null);
   const [loading, setLoading] = useState(true);
 
   const fetchProfile = async (userId: string) => {
@@ -43,7 +44,6 @@ export default function AuthProvider({ children }: PropsWithChildren) {
   };
 
   const fetchSession = async () => {
-    console.log("fetch session ran");
 
     const {
       data: { session },
