@@ -14,6 +14,7 @@ import OrderItemListItem from "@/src/components/OrderItemListItem";
 import { OrderStatusList } from "@/assets/types";
 import Colors from "@/src/constants/Colors";
 import { useOrderDetails } from "@/src/api/orders";
+import { useUpdateOrderSubscription } from "@/src/api/orders/subscription";
 
 const OrderDetailsPage = () => {
   const { orderId } = useLocalSearchParams();
@@ -21,7 +22,9 @@ const OrderDetailsPage = () => {
   const id = parseFloat(typeof orderId === "string" ? orderId : orderId![0]);
 
   const { data: order, isLoading, error } = useOrderDetails(id);
-  
+
+  useUpdateOrderSubscription(id);
+
   if (isLoading) {
     return <ActivityIndicator />;
   }

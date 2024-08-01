@@ -24,7 +24,7 @@ const OrdersPage = () => {
   }
   return (
     <View>
-      <Text>Hello</Text>
+
       <Stack.Screen options={{ title: "Orders" }} />
       <FlatList
         data={myOrders}
