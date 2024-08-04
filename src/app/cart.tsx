@@ -4,7 +4,7 @@ import { StatusBar } from "expo-status-bar";
 import { useCart } from "../providers/CartProvider";
 import CartListItem from "../components/CartListItem";
 import Button from "../components/Button";
-import { supabase } from "../lib/supabase";
+
 
 const cart = () => {
   const { items, total, checkout } = useCart();
@@ -42,7 +42,7 @@ const cart = () => {
             }}
           >
             No Items In The Cart!
-            <Button text="Sign Out" onPress={() => supabase.auth.signOut()} />
+           
           </Text>
         </View>
       )}
