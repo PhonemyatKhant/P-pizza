@@ -2,6 +2,7 @@ import { View, Text, StyleSheet, Image } from "react-native";
 import React from "react";
 import Colors from "../constants/Colors";
 import { OrderItem } from "@/assets/types";
+import RemoteImage from "./RemoteImage";
 
 type OrderItemListItemProps = {
   item: OrderItem;
@@ -10,11 +11,13 @@ type OrderItemListItemProps = {
 const OrderItemListItem = ({ item }: OrderItemListItemProps) => {
   return (
     <View style={styles.container}>
-      <Image
-        source={{ uri: item.products.image! }}
+      <RemoteImage
+        path={item.products.image}
+        fallback="https://img.freepik.com/free-vector/colorful-round-tasty-pizza_1284-10219.jpg?size=626&ext=jpg"
         style={styles.image}
         resizeMode="contain"
       />
+ 
       <View style={{ flex: 1 }}>
         <Text style={styles.title}>{item.products.name}</Text>
         <View style={styles.subtitleContainer}>
@@ -62,7 +65,7 @@ const styles = StyleSheet.create({
   quantity: {
     fontWeight: "500",
     fontSize: 18,
-    marginRight:10
+    marginRight: 10,
   },
   price: {
     color: Colors.light.tint,

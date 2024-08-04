@@ -3,20 +3,20 @@ import { Image, StyleSheet, Text, View, Pressable } from "react-native";
 import Colors from "@/src/constants/Colors";
 import { Product } from "@/assets/types";
 import { Link, useSegments } from "expo-router";
+import RemoteImage from "./RemoteImage";
 
 export default function ProductList({ product }: { product: Product }) {
   const segments = useSegments();
   return (
     <Link href={`/${segments[0]}/menu/${product.id}`} asChild>
       <Pressable style={styles.container}>
-        <Image
-          source={{
-            uri:
-              product.image! ||
-              "https://img.freepik.com/free-vector/colorful-round-tasty-pizza_1284-10219.jpg?size=626&ext=jpg",
-          }}
+        <RemoteImage
+          path={product.image}
+          fallback="https://img.freepik.com/free-vector/colorful-round-tasty-pizza_1284-10219.jpg?size=626&ext=jpg"
           style={styles.image}
+          resizeMode="contain"
         />
+        
         <Text style={styles.title}>{product.name} </Text>
         <Text style={styles.price}>${product.price} </Text>
       </Pressable>

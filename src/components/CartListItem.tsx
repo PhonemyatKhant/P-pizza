@@ -6,6 +6,7 @@ import { Link } from "expo-router";
 // import { defaultPizzaImage } from '../constants/Images';
 import { FontAwesome } from "@expo/vector-icons";
 import { useCart } from "../providers/CartProvider";
+import RemoteImage from "./RemoteImage";
 
 type CartListItemProps = {
   cartItem: CartItem;
@@ -15,11 +16,17 @@ const CartListItem = ({ cartItem }: CartListItemProps) => {
   const { updateQuantity } = useCart();
   return (
     <View style={styles.container}>
-      <Image
-        source={{ uri: cartItem.product.image! }}
+      <RemoteImage
+        path={cartItem.product.image}
+        fallback="https://img.freepik.com/free-vector/colorful-round-tasty-pizza_1284-10219.jpg?size=626&ext=jpg"
         style={styles.image}
         resizeMode="contain"
       />
+      {/* <Image
+        source={{ uri: cartItem.product.image! }}
+        style={styles.image}
+        resizeMode="contain"
+      /> */}
       <View style={{ flex: 1 }}>
         <Text style={styles.title}>{cartItem.product.name}</Text>
         <View style={styles.subtitleContainer}>
@@ -30,8 +37,6 @@ const CartListItem = ({ cartItem }: CartListItemProps) => {
       <View style={styles.quantitySelector}>
         <FontAwesome
           onPress={() => updateQuantity(cartItem.id, -1)}
-
-          
           name="minus"
           color="gray"
           style={{ padding: 5 }}

@@ -16,6 +16,7 @@ import { useCart } from "@/src/providers/CartProvider";
 import { FontAwesome } from "@expo/vector-icons";
 import Colors from "@/src/constants/Colors";
 import { useProduct } from "@/src/api/products";
+import RemoteImage from "@/src/components/RemoteImage";
 
 const sizes: PizzaSize[] = ["S", "M", "L", "XL"];
 
@@ -84,13 +85,11 @@ const ProductDetailsScreen = () => {
           }}
         >
           {/* ADD DEFAULT IMAGE HERE  */}
-          <Image
+          <RemoteImage
+            path={product.image}
+            fallback="https://img.freepik.com/free-vector/colorful-round-tasty-pizza_1284-10219.jpg?size=626&ext=jpg"
             style={styles.image}
-            source={{
-              uri:
-                product.image ||
-                "https://img.freepik.com/free-vector/colorful-round-tasty-pizza_1284-10219.jpg?size=626&ext=jpg",
-            }}
+            resizeMode="contain"
           />
 
           <Text style={[styles.title]}>${product.price} </Text>
